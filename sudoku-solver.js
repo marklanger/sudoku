@@ -1,4 +1,7 @@
 /*
+Notes:
+
+Practice grid
 003020600
 900305001
 001806400
@@ -8,6 +11,8 @@
 002609500
 800203009
 005010300
+
+Section 2-4 has to be "4"
 */
 
 const sudokuData = [
@@ -149,8 +154,56 @@ function calculatePossibleVals(board){
   };
 };
 
-let board = Board(sudokuData);
+function iterateSolve(board){
+  for ( let row = 1; row < 10; row++) {
+    for (let column = 1; column < 10; column++){
+      let id = row + "_" + column;
+      // if only one possible value
+      if (board[id]['possibleValues'].length == 1){
+	// make it the value
+	board[id]['value'] = board[id]['possibleValues'].pop();
+	// update the applicable remaining values for that row
+        board['remainingValues']["row" + (board[id]['row'])] = board['remainingValues']["row" + (board[id]['row'])].filter(x => x !== board[id]['value']);
+	// update the applicable remaining values for that column
+        board['remainingValues']["col" + (board[id]['column'])] = board['remainingValues']["col" + (board[id]['column'])].filter(x => x !== board[id]['value']);
+	// update the applicable remaining values for that square
+        board['remainingValues']["sq" + (board[id]['square'])] = board['remainingValues']["sq" + (board[id]['square'])].filter(x => x !== board[id]['value']);
+	board[id]['possibleValues'] = [];
+        calculatePossibleVals(board);
+      };
+    };
+  };
+  // console.log(checkIfSolved(board));
+};
+
+function sumOfValsInRow(board){
+  let listOfRows = [];
+  for(let r = 1; r < 10; r++){
+    let listOfUsedVals = [];
+    for(let c = 1; c < 10; c++){
+      let id = r + "_" + c;
+      if(board[id]['value'] !== 0) {
+	listOfUsedVals.push(board[id]['value']);
+      };
+    };
+    listOfRows.push(listOfUsedVals);
+  };
+  return listOfRows;
+};
+
+let board = new Board(sudokuData);
 
 remainingValsInEachRow(board);
 remainingValsInEachCol(board);
 remainingValsInEachSq(board, miniSquareIds);
+calculatePossibleVals(board);
+iterateSolve(board);
+iterateSolve(board);
+iterateSolve(board);
+iterateSolve(board);
+iterateSolve(board);
+iterateSolve(board);
+iterateSolve(board);
+iterateSolve(board);
+iterateSolve(board);
+iterateSolve(board);

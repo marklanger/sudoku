@@ -1,0 +1,12 @@
+* Tasks
+** TODO solve basic puzzle (when there is only one potential value)
+** TODO simple test that solution is complete
+** TODO ? solve if the puzzle offers two possible solutions (never one single option)
+** TODO ? complex test that the solution is complete
+** TODO make iterateSolve() automatic
+** TODO pull interateSolve row/col/sq updaters into separate function (probably simplest to make generic)
+** TODO look into refactoring the iterations through the board
+   - Object.entries()
+** TODO test
+* General Notes
+* Brainstorming
