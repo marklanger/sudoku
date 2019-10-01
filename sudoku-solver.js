@@ -72,7 +72,7 @@ function Cell(row, column, value){
     column: column,
     square: 0,
     value: value,
-    notValue: []
+    possibleValues: []
   };
 };
 
@@ -134,6 +134,19 @@ function remainingValsInEachSq(board, refsForSquares){
     });
     board['remainingValues']["sq" + i] = listOfRemaining.filter(x => !listOfUsedVals.includes(x));
   }
+};
+
+function calculatePossibleVals(board){
+  let rowVars, colVars, sqVars;
+  for ( let row = 1; row < 10; row++) {
+    for (let column = 1; column < 10; column++){
+      let id = row + "_" + column;
+      rowVars = board['remainingValues']["row" + (board[id]['row'])];
+      colVars = board['remainingValues']["col" + (board[id]['column'])];
+      sqVars = board['remainingValues']["sq" + (board[id]['square'])];
+      board[id]['possibleValues'] = sqVars.filter(x => rowVars.includes(x) && colVars.includes(x));
+    };
+  };
 };
 
 let board = Board(sudokuData);
