@@ -1,12 +1,19 @@
 * Tasks
-** TODO solve basic puzzle (when there is only one potential value)
+** DONE solve basic puzzle (when there is only one potential value)
 ** TODO simple test that solution is complete
+** TODO make solver automatic
 ** TODO ? solve if the puzzle offers two possible solutions (never one single option)
+** TODO research more complex ways to solve
 ** TODO ? complex test that the solution is complete
-** TODO make iterateSolve() automatic
 ** TODO pull interateSolve row/col/sq updaters into separate function (probably simplest to make generic)
-** TODO look into refactoring the iterations through the board
-   - Object.entries()
-** TODO test
+** TODO refactoring [0/3]
+   - [ ] look into refactoring the iterations through the board
+     - Object.entries()
+     - can you just use id's 1-81/0-80 instead of using cycling through all rows and columns?
+       - if not, can you make a function that iterates through the rows appropriately, so that is not repeated?
+   - [ ] make interateSolve() run functions of varying complexity
+     - current iterateSolve() should probably be checkForMissingNumbers() or something;
+   - [ ] iterateSolve() >> solve()
+** TODO tests
 * General Notes
 * Brainstorming
