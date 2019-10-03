@@ -13,6 +13,18 @@ Practice grid
 005010300
 
 Section 2-4 has to be "4"
+
+
+Most difficult practice grid
+300200000
+000107000
+706030500
+070009080
+900020004
+010800050
+009040301
+000702000
+000008006
 */
 
 const sudokuData = [
@@ -25,6 +37,17 @@ const sudokuData = [
   0,0,2,6,0,9,5,0,0,
   8,0,0,2,0,3,0,0,9,
   0,0,5,0,1,0,3,0,0];
+
+const sudokuData2 = [
+  3,0,0,2,0,0,0,0,0,
+  0,0,0,1,0,7,0,0,0,
+  7,0,6,0,3,0,5,0,0,
+  0,7,0,0,0,9,0,8,0,
+  9,0,0,0,2,0,0,0,4,
+  0,1,0,8,0,0,0,5,0,
+  0,0,9,0,4,0,3,0,1,
+  0,0,0,7,0,2,0,0,0,
+  0,0,0,0,0,8,0,0,6];
 
 const cellsInMiniSquares = {
   1: ["1_1", "1_2", "1_3", "2_1", "2_2", "2_3", "3_1", "3_2", "3_3"],
@@ -146,10 +169,18 @@ function calculatePossibleVals(board){
   for ( let row = 1; row < 10; row++) {
     for (let column = 1; column < 10; column++){
       let id = row + "_" + column;
-      rowVars = board['remainingValues']["row" + (board[id]['row'])];
-      colVars = board['remainingValues']["col" + (board[id]['column'])];
-      sqVars = board['remainingValues']["sq" + (board[id]['square'])];
-      board[id]['possibleValues'] = sqVars.filter(x => rowVars.includes(x) && colVars.includes(x));
+      if(board[id]['value'] == 0){
+        rowVars = board['remainingValues']["row" + (board[id]['row'])];
+        colVars = board['remainingValues']["col" + (board[id]['column'])];
+        sqVars = board['remainingValues']["sq" + (board[id]['square'])];
+        if(sqVars.length > rowVars.length && sqVars.length > colVars.length){
+          board[id]['possibleValues'] = sqVars.filter(x => rowVars.includes(x) && colVars.includes(x));
+        }else if (rowVars.length > sqVars.length && rowVars.length > colVars.length){
+          board[id]['possibleValues'] = rowVars.filter(x => sqVars.includes(x) && colVars.includes(x));
+        }else {
+          board[id]['possibleValues'] = colVars.filter(x => rowVars.includes(x) && sqVars.includes(x));
+        };
+      }
     };
   };
 };
@@ -163,10 +194,10 @@ function iterateSolve(board){
 	console.log("Cell ID: " + id + "\nCell value: " + board[id]['value']);
 	// make it the value
 	board[id]['value'] = board[id]['possibleValues'].pop();
-	console.log(board[id]['value'];
+	console.log(board[id]['value']);
 	// update the applicable remaining values for that row
         board['remainingValues']["row" + (board[id]['row'])] = board['remainingValues']["row" + (board[id]['row'])].filter(x => x !== board[id]['value']);
-	console.log(board['remainingValues']['value'];
+	console.log(board['remainingValues']["row" + (board[id]['row'])]);
 	// update the applicable remaining values for that column
         board['remainingValues']["col" + (board[id]['column'])] = board['remainingValues']["col" + (board[id]['column'])].filter(x => x !== board[id]['value']);
 	// update the applicable remaining values for that square
@@ -175,7 +206,7 @@ function iterateSolve(board){
       calculatePossibleVals(board);
     };
   };
-  // console.log(checkIfSolved(board));
+  buildBoard(board);
 };
 
 function sumOfValsInRow(board){
@@ -193,7 +224,25 @@ function sumOfValsInRow(board){
   return listOfRows;
 };
 
-let board = new Board(sudokuData);
+function buildBoard(board){
+  let root = document.getElementById('board');
+  while (root.firstChild) {
+    root.removeChild(root.firstChild);
+  };
+  let boardDiv = document.createElement('div');
+  for(let r = 1; r < 10; r++){
+    let rowDiv = document.createElement('div');
+    for(let c = 1; c < 10; c++){
+      const id = r + "_" + c;
+      const cellContent = document.createTextNode(board[id]['value']);
+      rowDiv.appendChild(cellContent);
+    };
+    boardDiv.appendChild(rowDiv);
+  };
+  root.appendChild(boardDiv);
+};
+
+let board = new Board(sudokuData2);
 
 remainingValsInEachRow(board);
 remainingValsInEachCol(board);
