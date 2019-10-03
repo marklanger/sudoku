@@ -26,7 +26,7 @@ const sudokuData = [
   8,0,0,2,0,3,0,0,9,
   0,0,5,0,1,0,3,0,0];
 
-const miniSquareIds = {
+const cellsInMiniSquares = {
   1: ["1_1", "1_2", "1_3", "2_1", "2_2", "2_3", "3_1", "3_2", "3_3"],
   2: ["1_4", "1_5", "1_6", "2_4", "2_5", "2_6", "3_4", "3_5", "3_6"],
   3: ["1_7", "1_8", "1_9", "2_7", "2_8", "2_9", "3_7", "3_8", "3_9"],
@@ -96,7 +96,7 @@ function Board(startingData){
 
 function designateSquare(id){
   for (let i = 1; i < 10; i++){
-    if(miniSquareIds[i].includes(id)){
+    if(cellsInMiniSquares[i].includes(id)){
       return i;
     }
   };
@@ -160,17 +160,19 @@ function iterateSolve(board){
       let id = row + "_" + column;
       // if only one possible value
       if (board[id]['possibleValues'].length == 1){
+	console.log("Cell ID: " + id + "\nCell value: " + board[id]['value']);
 	// make it the value
 	board[id]['value'] = board[id]['possibleValues'].pop();
+	console.log(board[id]['value'];
 	// update the applicable remaining values for that row
         board['remainingValues']["row" + (board[id]['row'])] = board['remainingValues']["row" + (board[id]['row'])].filter(x => x !== board[id]['value']);
+	console.log(board['remainingValues']['value'];
 	// update the applicable remaining values for that column
         board['remainingValues']["col" + (board[id]['column'])] = board['remainingValues']["col" + (board[id]['column'])].filter(x => x !== board[id]['value']);
 	// update the applicable remaining values for that square
         board['remainingValues']["sq" + (board[id]['square'])] = board['remainingValues']["sq" + (board[id]['square'])].filter(x => x !== board[id]['value']);
-	board[id]['possibleValues'] = [];
-        calculatePossibleVals(board);
       };
+      calculatePossibleVals(board);
     };
   };
   // console.log(checkIfSolved(board));
@@ -195,15 +197,6 @@ let board = new Board(sudokuData);
 
 remainingValsInEachRow(board);
 remainingValsInEachCol(board);
-remainingValsInEachSq(board, miniSquareIds);
+remainingValsInEachSq(board, cellsInMiniSquares);
 calculatePossibleVals(board);
-iterateSolve(board);
-iterateSolve(board);
-iterateSolve(board);
-iterateSolve(board);
-iterateSolve(board);
-iterateSolve(board);
-iterateSolve(board);
-iterateSolve(board);
-iterateSolve(board);
-iterateSolve(board);
+//iterateSolve(board);
