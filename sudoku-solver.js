@@ -242,10 +242,16 @@ function buildBoard(board){
   root.appendChild(boardDiv);
 };
 
-let board = new Board(sudokuData2);
+const handleClick = function(id){
+  iterateSolve(board);
+};
+
+let board = new Board(sudokuData);
+
+document.getElementById("solver").addEventListener("click", () => {iterateSolve(board);}); 
 
 remainingValsInEachRow(board);
 remainingValsInEachCol(board);
 remainingValsInEachSq(board, cellsInMiniSquares);
 calculatePossibleVals(board);
-//iterateSolve(board);
+buildBoard(board);
