@@ -14,7 +14,6 @@ Practice grid
 
 Section 2-4 has to be "4"
 
-
 Most difficult practice grid
 300200000
 000107000
@@ -95,7 +94,6 @@ function RemainingValues(){
 
 function Cell(row, column, value){
   return {
-    id: row + "_" + column,
     row: row,
     column: column,
     square: 0,
