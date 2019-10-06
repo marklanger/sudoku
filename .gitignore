@@ -1,3 +1,9 @@
 # Emacs ignore
 *~
 \#*\#
+
+# Node ignore
+node_modules/
+
+# Env ignore
+.env
