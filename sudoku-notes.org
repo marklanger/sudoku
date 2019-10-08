@@ -7,7 +7,6 @@
 ** TODO ? complex test that the solution is complete
 ** TODO pull interateSolve row/col/sq updaters into separate function (probably simplest to make generic)
 ** TODO refactoring [0/3]
-   - [ ] pull DOM manipulation into one file
    - [ ] look into refactoring the iterations through the board
      - Object.entries()
      - can you just use id's 1-81/0-80 instead of using cycling through all rows and columns?
@@ -17,25 +16,4 @@
    - [ ] iterateSolve() >> solve()
 ** TODO tests
 * General Notes
-** Testing with browser
-   - Issue: mocha/chai do not know what to do with "document" and DOM manipulation
-   - Potential solution: run with karma and use launchers for browsers
-   - Potential solution: run firefox in headless mode
-     - https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode
-     - need to integrate
-   - Current solution: refactor js files to isolate DOM manipulation;
 * Brainstorming
-** Solve methods
-*** Low hanging fruit - Find the only potential value
-    - cross-reference the possible values in the row, column, and square
-    - insert the value and update the possible values
-*** Brute force - guess and check
-    - look for low-hanging fruit
-    - guess
-    - repeat until success/failure
-*** Resources
-    - http://www.sudokuessentials.com/sudoku_tips.html
-      - Hidden Pairs
-      - Naked Triples
-      - Hidden Quads
-      - Naked Quads
