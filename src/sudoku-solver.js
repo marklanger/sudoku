@@ -100,105 +100,6 @@ function designateSquare(id){
   };
 };
 
-function remainingValsInEachRow(board){
-  for(let r = 1; r < 10; r++){
-    let listOfUsedVals = [];
-    let listOfRemaining = [1,2,3,4,5,6,7,8,9];
-    for(let c = 1; c < 10; c++){
-      let id = r + "_" + c;
-      if(board[id]['value'] !== 0) {
-	listOfUsedVals.push(board[id]['value']);
-      };
-    };
-    board['remainingValues']["row" + r] = listOfRemaining.filter(x => !listOfUsedVals.includes(x));
-  }
-};
-
-function remainingValsInEachCol(board){
-  for(let c = 1; c < 10; c++){
-    let listOfUsedVals = [];
-    let listOfRemaining = [1,2,3,4,5,6,7,8,9];
-    for(let r = 1; r < 10; r++){
-      let id = r + "_" + c;
-      if(board[id]['value'] !== 0) {
-	listOfUsedVals.push(board[id]['value']);
-      };
-    };
-    board['remainingValues']["col" + c] = listOfRemaining.filter(x => !listOfUsedVals.includes(x));
-  }
-};
-
-function remainingValsInEachSq(board, refsForSquares){
-  for(let i = 1; i < 10; i++){
-    let listOfUsedVals = [];
-    let listOfRemaining = [1,2,3,4,5,6,7,8,9];
-    refsForSquares[i].forEach(id => {
-      listOfUsedVals.push(board[id]['value']);
-    });
-    board['remainingValues']["sq" + i] = listOfRemaining.filter(x => !listOfUsedVals.includes(x));
-  }
-};
-
-function calculatePossibleVals(board){
-  let rowVars, colVars, sqVars;
-  for ( let row = 1; row < 10; row++) {
-    for (let column = 1; column < 10; column++){
-      let id = row + "_" + column;
-      if(board[id]['value'] == 0){
-        rowVars = board['remainingValues']["row" + (board[id]['row'])];
-        colVars = board['remainingValues']["col" + (board[id]['column'])];
-        sqVars = board['remainingValues']["sq" + (board[id]['square'])];
-        if(sqVars.length > rowVars.length && sqVars.length > colVars.length){
-          board[id]['possibleValues'] = sqVars.filter(x => rowVars.includes(x) && colVars.includes(x));
-        }else if (rowVars.length > sqVars.length && rowVars.length > colVars.length){
-          board[id]['possibleValues'] = rowVars.filter(x => sqVars.includes(x) && colVars.includes(x));
-        }else {
-          board[id]['possibleValues'] = colVars.filter(x => rowVars.includes(x) && sqVars.includes(x));
-        };
-      }
-    };
-  };
-};
-
-function iterateSolve(board){
-  for ( let row = 1; row < 10; row++) {
-    for (let column = 1; column < 10; column++){
-      let id = row + "_" + column;
-      // if only one possible value
-      if (board[id]['possibleValues'].length == 1){
-	console.log("Cell ID: " + id + "\nCell value: " + board[id]['value']);
-	// make it the value
-	board[id]['value'] = board[id]['possibleValues'].pop();
-	console.log(board[id]['value']);
-	// update the applicable remaining values for that row
-        board['remainingValues']["row" + (board[id]['row'])] = board['remainingValues']["row" + (board[id]['row'])].filter(x => x !== board[id]['value']);
-	console.log(board['remainingValues']["row" + (board[id]['row'])]);
-	// update the applicable remaining values for that column
-        board['remainingValues']["col" + (board[id]['column'])] = board['remainingValues']["col" + (board[id]['column'])].filter(x => x !== board[id]['value']);
-	// update the applicable remaining values for that square
-        board['remainingValues']["sq" + (board[id]['square'])] = board['remainingValues']["sq" + (board[id]['square'])].filter(x => x !== board[id]['value']);
-      };
-      calculatePossibleVals(board);
-    };
-  };
-  buildBoard(board);
-};
-
-function sumOfValsInRow(board){
-  let listOfRows = [];
-  for(let r = 1; r < 10; r++){
-    let listOfUsedVals = [];
-    for(let c = 1; c < 10; c++){
-      let id = r + "_" + c;
-      if(board[id]['value'] !== 0) {
-	listOfUsedVals.push(board[id]['value']);
-      };
-    };
-    listOfRows.push(listOfUsedVals);
-  };
-  return listOfRows;
-};
-
 function buildBoard(board){
   let root = document.getElementById('board');
   while (root.firstChild) {
@@ -308,8 +209,4 @@ let board = new Board(sudokuData2);
 
 document.getElementById("solver").addEventListener("click", () => {handleClick(board, cellsInMiniSquares, buildBoard);}); 
 
-// remainingValsInEachRow(board);
-// remainingValsInEachCol(board);
-// remainingValsInEachSq(board, cellsInMiniSquares);
-// calculatePossibleVals(board);
 buildBoard(board);
