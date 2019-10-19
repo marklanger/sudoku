@@ -230,7 +230,6 @@ function bruteForceSolve(board, refsForSquares, callback){
   for (let i = 0; i < 81; i++){
   // picks a number
     let id = listOfIds[i];
-    // console.log("Box " + id + " has " + board[id]['possibleValues'].length + " possible values.");
     if (board[id]['value'] == 0 && board[id]['possibleValues'].length == 0){
       board[id]['value'] = 0;
       board[listOfIds[i - 1]]['value'] = 0;
@@ -254,15 +253,6 @@ function bruteForceSolve(board, refsForSquares, callback){
     // if board does not fail, continue to next box
   };
   callback(board);
-};
-
-function resetValues(board, listOfIds, i){
-  // go through and reset possible values for any values that are not currently accepted
-  while(board[listOfIds[i]]['possibleValues'].length == 0){
-    board[listOfIds[i]]['possibleValues'] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    board[listOfIds[i]]['value'] = 0;
-    i--;
-  };
 };
 
 function checkForFailure(board, refsForSquares){
@@ -292,17 +282,21 @@ function checkForFailure(board, refsForSquares){
       };
     };
   };
-  for(let i = 1; i < 10; i++){
+  // check to make sure there are no repeat numbers in squares
+  // cycle through each square
+  for (let squareId = 1; squareId < 10; squareId++){
     let listOfUsedVals = [];
-    refsForSquares[i].forEach(id => {
+    // cycle through each box (where the id of the box == refsForSquares[squareId][boxRef])
+    for (let boxRef = 0; boxRef < 9; boxRef++){
+      let id = refsForSquares[squareId][boxRef];
       if(listOfUsedVals.includes(board[id]['value'])) {
 	return true;
       };
       if (board[id]['value'] !== 0){
         listOfUsedVals.push(board[id]['value']);
       };
-    });
-  };
+    }
+  }
   return false;
 };
 
@@ -310,7 +304,7 @@ const handleClick = function(board, refsForSquares, buildBoard){
   bruteForceSolve(board, refsForSquares, buildBoard);
 };
 
-let board = new Board(sudokuData);
+let board = new Board(sudokuData2);
 
 document.getElementById("solver").addEventListener("click", () => {handleClick(board, cellsInMiniSquares, buildBoard);}); 
 
