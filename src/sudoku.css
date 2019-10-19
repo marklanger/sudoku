@@ -1,5 +1,5 @@
 h1 {
-    margin: 20px;
+    color: green;
 };
 
 #board {
@@ -10,7 +10,8 @@ h1 {
     border: 25px solid #333;
 };
 
-.solver {
+#solver {
+    color: red;
     padding: 70px;
     margin-left: auto;
     margin-right: auto;
