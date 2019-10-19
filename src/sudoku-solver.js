@@ -1,31 +1,4 @@
-/*
-Notes:
-
-Practice grid
-003020600
-900305001
-001806400
-008102900
-700000008
-006708200
-002609500
-800203009
-005010300
-
-Section 2-4 has to be "4"
-
-Most difficult practice grid
-300200000
-000107000
-706030500
-070009080
-900020004
-010800050
-009040301
-000702000
-000008006
-*/
-
+// Practice grid
 const sudokuData = [
   0,0,3,0,2,0,6,0,0,
   9,0,0,3,0,5,0,0,1,
@@ -37,6 +10,7 @@ const sudokuData = [
   8,0,0,2,0,3,0,0,9,
   0,0,5,0,1,0,3,0,0];
 
+// Most difficult practice grid
 const sudokuData2 = [
   3,0,0,2,0,0,0,0,0,
   0,0,0,1,0,7,0,0,0,
@@ -98,7 +72,7 @@ function Cell(row, column, value){
     column: column,
     square: 0,
     value: value,
-    possibleValues: []
+    possibleValues: [1, 2, 3, 4, 5, 6, 7, 8, 9]
   };
 };
 
@@ -109,6 +83,9 @@ function Board(startingData){
       let id = row + "_" + column;
       board[id] = Cell( row, column, startingData.shift() );
       board[id]['square'] = designateSquare(id);
+      if (board[id]['value'] !== 0){
+	board[id]['possibleValues'] = [];
+      };
     };
   };
   board['remainingValues'] = new RemainingValues;
@@ -240,16 +217,105 @@ function buildBoard(board){
   root.appendChild(boardDiv);
 };
 
-const handleClick = function(id){
-  iterateSolve(board);
+function bruteForceSolve(board, refsForSquares, callback){
+  // build list of IDs to make iterating back and forth easier
+  let listOfIds = [];
+  for(let r = 1; r < 10; r++){
+    for(let c = 1; c < 10; c++){
+      let id = r + "_" + c;
+      listOfIds.push(id);
+    };
+  };
+  // cycles through each box
+  for (let i = 0; i < 81; i++){
+  // picks a number
+    let id = listOfIds[i];
+    // console.log("Box " + id + " has " + board[id]['possibleValues'].length + " possible values.");
+    if (board[id]['value'] == 0 && board[id]['possibleValues'].length == 0){
+      board[id]['value'] = 0;
+      board[listOfIds[i - 1]]['value'] = 0;
+      board[id]['possibleValues'] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      i -= 2;
+    }else if (board[id]['value'] == 0){
+      board[id]['value'] = board[id]['possibleValues'].pop();
+    };
+
+    // if board does fail and there are more numbers to try, try the next number
+    if (checkForFailure(board, refsForSquares) && board[id]['possibleValues'].length > 0){
+      board[id]['value'] = 0;
+      i -= 1;
+    // if failure && all numbers have been tried, go back one box and cycle up
+    } else if (checkForFailure(board, refsForSquares) && board[id]['possibleValues'].length == 0){
+      board[id]['value'] = 0;
+      board[listOfIds[i - 1]]['value'] = 0;
+      board[id]['possibleValues'] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      i -= 2;
+    };
+    // if board does not fail, continue to next box
+  };
+  callback(board);
+};
+
+function resetValues(board, listOfIds, i){
+  // go through and reset possible values for any values that are not currently accepted
+  while(board[listOfIds[i]]['possibleValues'].length == 0){
+    board[listOfIds[i]]['possibleValues'] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    board[listOfIds[i]]['value'] = 0;
+    i--;
+  };
+};
+
+function checkForFailure(board, refsForSquares){
+  // check to make sure there are no repeat numbers in rows
+  for(let r = 1; r < 10; r++){
+    let listOfUsedVals = [];
+    for(let c = 1; c < 10; c++){
+      let id = r + "_" + c;
+      if(listOfUsedVals.includes(board[id]['value'])) {
+	return true;
+      };
+      if (board[id]['value'] !== 0){
+        listOfUsedVals.push(board[id]['value']);
+      };
+    };
+  };
+  // check to make sure there are no repeat numbers in columns
+  for(let c = 1; c < 10; c++){
+    let listOfUsedVals = [];
+    for(let r = 1; r < 10; r++){
+      let id = r + "_" + c;
+      if(listOfUsedVals.includes(board[id]['value'])) {
+	return true;
+      };
+      if (board[id]['value'] !== 0){
+        listOfUsedVals.push(board[id]['value']);
+      };
+    };
+  };
+  for(let i = 1; i < 10; i++){
+    let listOfUsedVals = [];
+    refsForSquares[i].forEach(id => {
+      if(listOfUsedVals.includes(board[id]['value'])) {
+	return true;
+      };
+      if (board[id]['value'] !== 0){
+        listOfUsedVals.push(board[id]['value']);
+      };
+    });
+  };
+  return false;
+};
+
+const handleClick = function(board, refsForSquares, buildBoard){
+  bruteForceSolve(board, refsForSquares, buildBoard);
 };
 
 let board = new Board(sudokuData);
 
-document.getElementById("solver").addEventListener("click", () => {iterateSolve(board);}); 
+document.getElementById("solver").addEventListener("click", () => {handleClick(board, cellsInMiniSquares, buildBoard);}); 
 
-remainingValsInEachRow(board);
-remainingValsInEachCol(board);
-remainingValsInEachSq(board, cellsInMiniSquares);
-calculatePossibleVals(board);
+// remainingValsInEachRow(board);
+// remainingValsInEachCol(board);
+// remainingValsInEachSq(board, cellsInMiniSquares);
+// calculatePossibleVals(board);
 buildBoard(board);
