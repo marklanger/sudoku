@@ -3,8 +3,7 @@
 ** TODO simple test that solution is complete
 ** TODO make solver automatic
 ** TODO ? solve if the puzzle offers two possible solutions (never one single option)
-** TODO research more complex ways to solve
-** TODO ? complex test that the solution is complete
+** DONE research more complex ways to solve
 ** TODO pull interateSolve row/col/sq updaters into separate function (probably simplest to make generic)
 ** TODO refactoring [0/3]
    - [ ] look into refactoring the iterations through the board
@@ -16,4 +15,8 @@
    - [ ] iterateSolve() >> solve()
 ** TODO tests
 * General Notes
+** React in HTML
+   - does not work with JSX, without adding babel or some other factors for JSX
+   - for now, working on just using React.creatElement to build what I need
+     - see: https://reactjs.org/docs/react-without-jsx.html
 * Brainstorming

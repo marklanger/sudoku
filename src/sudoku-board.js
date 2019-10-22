@@ -9,10 +9,10 @@ class SudokuBoard extends React.Component {
 
   render() {
     return (
-      <div>Here's my board</div>
+      e('div', null, "Hello world!")
     );
   }
 }
 
 const domContainer = document.querySelector('#board');
-ReactDOM.render(e(SudokuBoard, domContainer));
+ReactDOM.render(e(SudokuBoard), domContainer);
